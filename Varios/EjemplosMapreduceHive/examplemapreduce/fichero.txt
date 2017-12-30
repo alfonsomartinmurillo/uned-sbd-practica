@@ -1,0 +1,2 @@
+Hola esto es una prueba de un contador de palabras
+Espero que esta prueba salga bien y que el contador de palabras cuente bien

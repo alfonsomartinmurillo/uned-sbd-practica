@@ -1,0 +1,98 @@
+
+hadoop fs -mkdir examplehive
+
+hadoop fs -put /home/cloudera/examplehive/GDS1001_full.soft.txt examplehive
+
+hadoop jar  /usr/lib/hadoop-mapreduce/hadoop-streaming.jar -file /home/cloudera/examplehive/mapper_clean.py    -mapper /home/cloudera/examplehive/mapper_clean.py  -input /user/cloudera/examplehive/* -output /user/cloudera/examplehive-output
+
+hadoop fs -copyToLocal  /user/cloudera/examplehive-output/part-00000
+
+mv part-00000 DataClean.txt
+
+
+
+select genetitle from dataclean01 where genetitle like '%human%'
+
+select count(genetitle) from dataclean01 where genetitle like '%human%'
+
+
+--- tabla interna 
+
+create table dataclean01internal (
+  idref  STRING,   ident  STRING,
+  gsm19023 FLOAT,   gsd19024 FLOAT, 
+  gsd19025 FLOAT,    gsd19026 FLOAT, 
+  genetitle STRING,   genesymbol STRING,
+  geneID SMALLINT,    uniGenetitle STRING,
+  uniGenesymbol STRING,   uniGeneID STRING,
+  NucleotideTitle STRING) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+
+
+load data inpath '/user/cloudera/DataClean.txt' into table dataclean01internal ;
+
+
+--- tabla externa
+
+hadoop fs -mkdir Data
+
+hadoop fs -put DataClean.txt Data
+
+create external table dataclean01external (
+  idref  STRING,   ident  STRING, 
+  gsm19023 FLOAT,  gsd19024 FLOAT, 
+  gsd19025 FLOAT,   gsd19026 FLOAT, 
+  genetitle STRING,   genesymbol STRING,
+  geneID SMALLINT,   uniGenetitle STRING,
+  uniGenesymbol STRING,  uniGeneID STRING,
+  NucleotideTitle STRING) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'	LOCATION '/user/cloudera/Data';
+
+
+--- tabla interna con particiones
+
+
+hadoop fs -put part1-zwint.txt .
+
+hadoop fs -put part2-Znrf2.txt .
+
+create table dataclean01internalpart (
+  idref  STRING,   ident  STRING,
+  gsm19023 FLOAT,   gsd19024 FLOAT, 
+  gsd19025 FLOAT,    gsd19026 FLOAT, 
+  genesymbol STRING,
+       geneID SMALLINT,   uniGenetitle STRING,
+       uniGenesymbol STRING,  uniGeneID STRING,
+       NucleotideTitle STRING) 
+PARTITIONED BY (genetitle STRING) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+
+load data inpath '/user/cloudera/part1-zwint.txt' into table dataclean01internalpart partition (genetitle='zwint');
+load data inpath '/user/cloudera/part2-Znrf2.txt' into table dataclean01internalpart partition (genetitle='Znrf2');
+
+
+--- tabla externa con particiones
+
+
+hadoop fs -mkdir /user/cloudera/DataPart
+
+hadoop fs -mkdir /user/cloudera/DataPart/zwint
+
+hadoop fs -mkdir /user/cloudera/DataPart/Znrf2
+
+create external table dataclean01externalpart (
+  idref  STRING,   ident  STRING,
+  gsm19023 FLOAT,   gsd19024 FLOAT, 
+  gsd19025 FLOAT,    gsd19026 FLOAT, 
+  genesymbol STRING,   geneID SMALLINT, 
+  uniGenetitle STRING,   uniGenesymbol STRING,
+  uniGeneID STRING,   NucleotideTitle STRING) 
+PARTITIONED BY (genetitle STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+
+ALTER TABLE dataclean01externalpart ADD PARTITION(genetitle='Znrf2') LOCATION '/user/cloudera/DataPart/Znrf2';
+ALTER TABLE dataclean01externalpart ADD PARTITION(genetitle='zwint') LOCATION '/user/cloudera/DataPart/zwint';
+
+hadoop fs -put part2-Znrf2.txt  /user/cloudera/DataPart/Znrf2
+hadoop fs -put part1-zwint.txt  /user/cloudera/DataPart/zwint
+

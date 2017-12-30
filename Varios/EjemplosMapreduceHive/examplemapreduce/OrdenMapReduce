@@ -1,0 +1,1 @@
+hadoop jar  /usr/lib/hadoop-mapreduce/hadoop-streaming.jar -file /home/cloudera/examplemapreduce/mapper.py    -mapper /home/cloudera/examplemapreduce/mapper.py -file /home/cloudera/examplemapreduce/reducer.py   -reducer /home/cloudera/examplemapreduce/reducer.py -input /user/cloudera/examplemapreduce/* -output /user/cloudera/examplemapreduce-output

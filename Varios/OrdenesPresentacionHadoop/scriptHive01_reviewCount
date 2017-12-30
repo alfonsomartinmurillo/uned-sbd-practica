@@ -1,0 +1,5 @@
+SELECT name, review_count 
+FROM business		    
+ORDER BY review_count DESC
+LIMIT 25
+

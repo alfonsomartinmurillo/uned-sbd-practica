@@ -1,0 +1,5 @@
+hadoop fs -mkdir examplebioinformatics
+
+hadoop fs -put /home/cloudera/examplebioinformatics/GDS1001_full.soft.txt examplebioinformatics
+
+hadoop jar  /usr/lib/hadoop-mapreduce/hadoop-streaming.jar -file /home/cloudera/examplebioinformatics/mapper.py    -mapper /home/cloudera/examplebioinformatics/mapper.py -file /home/cloudera/examplebioinformatics/reducer.py   -reducer /home/cloudera/examplebioinformatics/reducer.py -input /user/cloudera/examplebioinformatics/* -output /user/cloudera/examplebioinformatics-output 
