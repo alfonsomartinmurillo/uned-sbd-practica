@@ -21,7 +21,7 @@ class mrlabmayoravg(MRJob):
 	
 		# me quedo con el campo gsd19025
 		yield("gsd19025",float(gsd19025))
-		print "{0}".format(gsd19025)
+		#print "{0}".format(gsd19025)
 
 
 # La función reducer se encarga de obtener la media de todos los elementos

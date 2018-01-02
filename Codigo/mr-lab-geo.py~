@@ -10,8 +10,6 @@ WORD_RE = re.compile(r"[\w']+")
 
 class mrlabgeo(MRJob):
 
-
-
 #funcion mapper
 
     def mapper(self, _, line): #Esta función actúa por cada una de las lineas de entrada.
