@@ -22,7 +22,7 @@ class mrlabmayoravg(MRJob):
 		# dispongo del average en formato float.
 		tgsm19023=float(gsm19023)
 		if tgsm19023>=100 and tgsm19023<=1000:
-		# Imprimo el campo average, que utilizará el reduce
+		# me quedo con el el campo average, que utilizará el reduce
 			yield(_,float(average))
 
 # La función reducer se encarga de obtener la máxima media

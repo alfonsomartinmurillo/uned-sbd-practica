@@ -21,12 +21,10 @@ class mrlabmayoravg(MRJob):
 	
 		# me quedo con el campo gsd19025
 		yield("gsd19025",float(gsd19025))
-		#print "{0}".format(gsd19025)
-
 
 # La función reducer se encarga de obtener la media de todos los elementos
     def reducer(self, etiqueta, gsd19025):
-	lista = list(gsd19025)
+	lista = list(gsd19025) # utilizo una lista para realizar la suma de sus elementos por un lado, y conocer el nº de elementos por otro
 	avg = sum(lista) / len(lista)
 	print "Media total: {0}".format(avg)
 	
